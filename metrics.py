@@ -13,6 +13,7 @@ import numpy as np
 
 class MetricCalculator():
     def __init__(self, price_data, rf_annual):
+        self.data = price_data
         self.returns = price_data.pct_change.dropna()
         self.rf_annual = rf_annual
 
@@ -64,5 +65,11 @@ class MetricCalculator():
     def turnover():
         pass
 
-    def maxDrawdown(df):
-        pass
+    def maxDrawdown(self):
+        rolling_max = self.data['Close'].cummax()
+        drawdown = abs( (self.data['Close'] - rolling_max) / rolling_max )
+        max_dd = drawdown.max()
+        avg_dd = drawdown[drawdown > 0].mean()
+
+        print(f"Max Drawdown: {max_dd:.2%}")
+        print(f"Average Drawdown: {avg_dd:.2%}")
