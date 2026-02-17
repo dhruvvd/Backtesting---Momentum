@@ -45,6 +45,9 @@ def signal_gen(df):
     df[df['c_shifted'] < 0 & df['crossover'] > 0, 'signal'] = 1
     df[df['c_shifted'] > 0 & df['crossover'] < 0, 'signal'] = 2
 
+    df['b_date'] = df[df['signal'] == 1, df.index]
+    df['s_date'] = df[df['signal'] == 2, df.index]
+
 
 # -- CALCULATING PROFITS / LOSSES
 
