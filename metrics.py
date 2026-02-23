@@ -1,20 +1,11 @@
 import pandas as pd
 import numpy as np
 
-"""
---- PREREQUISITES FOR USING THE METRICS CLASS -- 
-
-    You must calculate the following before using any of the Metrics Calculator class methods:
-
-    -> starting equity
-    -> final equity
-"""
-
 
 class MetricCalculator():
-    def __init__(self, price_data, rf_annual):
-        self.data = price_data
-        self.returns = price_data.pct_change.dropna()
+    def __init__(self, equity_curve, rf_annual):
+        self.data = equity_curve
+        self.returns = equity_curve.pct_change.dropna()
         self.rf_annual = rf_annual
 
         self.rf_daily = (1 + self.rf_annual)**(1/252) - 1
@@ -59,15 +50,15 @@ class MetricCalculator():
 
         return excess_rets / self.downside_deviation(annualize=False)
 
-    def hitRate():
-        pass
+    def hitRate(self, trades_won, total_trades):
+        return (trades_won / total_trades) * 100 if total_trades > 0 else 0
 
-    def turnover():
-        pass
+    def turnover(self, buy_total, sell_total):
+        return min(buy_total, sell_total) / self.data.mean()
 
     def maxDrawdown(self):
-        rolling_max = self.data['Close'].cummax()
-        drawdown = abs( (self.data['Close'] - rolling_max) / rolling_max )
+        rolling_max = self.data.cummax()
+        drawdown = abs( (self.data - rolling_max) / rolling_max )
         max_dd = drawdown.max()
         avg_dd = drawdown[drawdown > 0].mean()
 
